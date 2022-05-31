@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Add React in One Minute</title>
+    <script type="module">
+        import {loadModule} from 'https://klesun.github.io/ts-browser/src/ts-browser.js';
+        loadModule('./index.ts').then(indexModule => {
+            return indexModule.default(document.getElementById('composeCont'));
+        });
+    </script>
+</head>
+
+<body>
+    <!-- <canvas class="canvas rounded" id="canvas" width="1772" height="1241">
+        Sorry, your browser doesn't support the &lt;canvas&gt; element.
+    </canvas> -->
+    <div id="errors" style="
+        background: #c00;
+        color: #fff;
+        display: none;
+        margin: -20px -20px 20px;
+        padding: 20px;
+        white-space: pre-wrap;
+    "></div>
+    <div id="root"></div>
+
+</body>
+</html>
