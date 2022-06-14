@@ -1,5 +1,5 @@
 // import {makePanel} from './utils/SomeDomMaker';
 
-export default (composeCont) => {
-    // composeCont.appendChild(makePanel());
+export default (root) => {
+    root.innerText = "Hello world";
 };
