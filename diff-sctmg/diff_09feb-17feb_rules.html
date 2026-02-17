@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>JSON Diff Report</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.5; color: #24292e; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f6f8fa; }
+        h1 { border-bottom: 1px solid #eaecef; padding-bottom: 10px; }
+        h2 { margin-top: 30px; color: #0366d6; border-bottom: 1px solid #eaecef; padding-bottom: 5px; }
+        
+        .card { background: #fff; border: 1px solid #e1e4e8; border-radius: 6px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .card-header { background: #f6f8fa; padding: 10px 15px; border-bottom: 1px solid #e1e4e8; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .card-body { padding: 15px; font-size: 13px; }
+
+        /* Diff Containers */
+        .obj-diff { margin-left: 10px; padding-left: 10px; border-left: 2px solid #e1e4e8; margin-bottom: 10px; }
+        .diff-row { display: flex; margin-bottom: 4px; font-family: Consolas, monospace; }
+        .diff-key { min-width: 120px; color: #666; font-weight: bold; flex-shrink: 0; }
+        .diff-val { flex-grow: 1; word-break: break-word; }
+
+        /* Highlighting */
+        .val-add { color: #1a7f37; background: #e6ffec; padding: 0 4px; border-radius: 3px; }
+        .val-del { color: #cf222e; background: #ffebe9; text-decoration: line-through; padding: 0 4px; border-radius: 3px; }
+        
+        .row-add { background: #e6ffec; border-left: 3px solid #2da44e; padding: 5px; margin-bottom: 5px; border-radius: 0 4px 4px 0; }
+        .row-del { background: #ffebe9; border-left: 3px solid #cf222e; padding: 5px; margin-bottom: 5px; border-radius: 0 4px 4px 0; }
+        
+        /* Inline Diff */
+        .ins { background-color: #acf2bd; text-decoration: none; border-radius: 2px; border-bottom: 1px solid #22863a; color: #000; }
+        .del { background-color: #fdb8c0; text-decoration: line-through; border-radius: 2px; color: #555; }
+
+        .sub-header { font-weight: bold; color: #0366d6; margin-top: 15px; margin-bottom: 5px; font-family: sans-serif; border-bottom: 1px dashed #eaecef; padding-bottom: 2px; }
+        .sub-header:first-child { margin-top: 0; }
+        .rule-block-label { font-size: 11px; color: #999; text-transform: uppercase; margin-bottom: 2px; }
+        
+        .badge { display: inline-block; padding: 2px 6px; border-radius: 10px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .badge-mod { background: #fff5b1; color: #735c0f; }
+        .badge-add { background: #dafbe1; color: #1a7f37; }
+        .badge-del { background: #ffebe9; color: #cf222e; }
+    </style>
+</head>
+<body>
+    <h1>Diff Report</h1>
+    <div id="stats"></div>
+<h2>Rules Sections</h2><div class="card"><div class="card-header"><span>1.0 CORE RULES</span><span class="badge badge-mod">MODIFIED</span></div><div class="card-body"><div class="rule-block-label">Page 1 - Block 1 (text)</div><div class="diff-row"><span class="diff-val"><span class="ins">V.01 - update 10.02.2026
+</span>1.0 CORE CONCEPTS
+This section of the core rules contains the essential framework that is used in all games of StarCraft: The Miniatures Game.
+1.1 MODELS
+The Archon Studio miniatures that make up your army are models. Each model is any single entity (be it a Marine, a Zergling or a massive Ultralisk) mounted on its own independent base. While the model itself represents the character or vehicle, the following rules strictly govern the model via its base.
+
+
+1.2 UNITS
+An army is composed of Units. A Unit consists of one or more models that act together as a single cohesive formation.
+
+Composition: The number of models in a Unit is defined by its Unit Card. For example, a basic infantry Unit might consist of several soldiers, while a heavy siege vehicle might operate as a Unit of one.
+
+Cohesion: Models within a Unit fight, move, and die collectively. They are bound by the rules of Coherency (section 1.6.4), representing the discipline and communication required to operate on a battlefield.
+
+Friendly &amp;amp; Enemy: Units in your army are referred to as friendly Units. Likewise, Units in your opponent’s army are referred to as enemy Units.</span></div><div style="margin-bottom:10px;"></div><div class="rule-block-label">Page 3 - Block 6 (text)</div><div class="diff-row"><span class="diff-val">1.6.5 DIRECTLY TOWARDS &amp;amp; DIRECTLY AWAY
+Some abilities may force a <span class="del">model</span><span class="ins">unit</span> to move directly towards or directly away from another <span class="del">model</span><span class="ins">unit</span> on the battlefield. When this is the case, the path of this move is determined by drawing an imaginary straight line from the center of the acting model’s base through the center of the <span class="del">affected</span><span class="ins">targeted</span> model’s base.  
+
+The affected model must adhere to this line when moving in a straight line directly towards or directly away from the <span class="del">acting</span><span class="ins">target</span> model. However, if the path of the imaginary line is blocked by terrain or another model, the affected model must bypass them via the shortest possible route to continue in the direction specified. If there are two valid equidistant paths, the controlling player of the affected model may choose which one the affected model will take<span class="ins">. 
+
+When moving directly towards, and the affected Unit contains more than one model, the Leading Model must be the model physically closest to the target the Unit is moving towards. Move the Leading Model first. The remaining models must then be Placed as close to the target as possible, while maintaining Unit Coherency. Models that cannot end a movement closer to the target cannot move at all. If the target Unit contains more than one model, the imaginary line must be drawn towards the center of the base of the model physically closest to the acting model.
+
+When moving directly away, and the affected Unit contains more than one model, the Leading Model must be the model physically farthest from the target the Unit is moving away from. Move the Leading Model first. The remaining models must then be Placed as far from the target as possible, while maintaining Unit Coherency. Models that cannot end a movement farther from the target cannot move at all. If the target Unit contains more than one model, the imaginary line must be drawn towards the center of the base of the model physically farthest from the acting model</span>.</span></div><div style="margin-bottom:10px;"></div></div></div><div class="card"><div class="card-header"><span>2.0 CORE MECHANICS</span><span class="badge badge-mod">MODIFIED</span></div><div class="card-body"><div class="rule-block-label">Page 1 - Block 5 (text)</div><div class="diff-row"><span class="diff-val">2.3.2 BLOCKING TERRAIN (SIZE VS. EFFECTIVE SIZE)
+Not all terrain blocks sight. A low wall hides a Zergling but does nothing to hide a Colossus. A terrain piece blocks LoS only if it meets BOTH of the following conditions:
+
+Blocks the View (Attacker Check): The terrain’s Effective Size (Section 2.3.4) must be equal to or larger than the Attacker’s Effective Size.<span class="del"> 
+
+</span><span class="ins"> The wall must be tall enough relative to the shooter to obstruct their view.
+
+</span>Hides the Target (Target Check): The terrain’s Size must be equal to or larger than the Target’s Effective Size<span class="ins">. The wall must be physically tall enough to obscure the target model</span>.</span></div><div style="margin-bottom:10px;"></div></div></div><div class="card"><div class="card-header"><span>4.0 THE GAME SEQUENCE - MOVEMENT PHASE</span><span class="badge badge-mod">MODIFIED</span></div><div class="card-body"><div class="rule-block-label">Page 1 - Block 2 (text)</div><div class="diff-row"><span class="diff-val">4.4 MOVEMENT PHASE ACTIONS
+4.4.1 HOLD
+It is considered Activated for the phase. 
+
+Place an Activation Marker as normal.
+
+4.4.2 MOVE
+The Move Action is split into two steps depending on the number of models in the acting Unit. If the acting Unit has only 1 model, ignore Step <span class="ins">2.
+4.4.</span>2<span class="ins"> MOVE
+The Move Action allows the non-Engaged unit to change its position on the battlefield. Only a Unit that is currently Non-Engaged may declare this action. Resolve a Move.
+
+Only a Unit that is currently Non-Engaged may declare this action. Resolve a Move</span>.
+
+<span class="ins">4.4.3 MOVING A UNIT
+The Move  is split into two steps depending on the number of models in the acting Unit. If the acting Unit has only 1 model, ignore Step 2.
+
+
+
+
+
+</span>STEP 1 - THE LEADING MODEL
+Choose one model in the Unit to be the Leading Model for this action. 
+
+Move only the Leading Model a distance up to the Unit’s Speed. 
+
+Measure the actual path traveled. The distance cannot exceed Speed. 
+
+The Leading Model may pass through friendly models in its own Unit. 
+
+The Leading Model cannot move through enemy models or friendly models from other Units. The base must physically fit through any gap. 
+
+The Leading Model cannot end within Engagement Range (1&quot;) of an enemy Unit.
+
+The Leading Model cannot move through terrain of Size 2 or larger.
+
+The Leading Model cannot change their elevation unless it moves through an ACCESS POINT connecting two different elevations. In that case, it must end on the elevation it entered after moving through the ACCESS POINT. 
+
+
+
+STEP - 2 OTHER MODELS IN THE UNIT
+Once the Leading Model is placed, pick up all other models in the Unit and Place them on the battlefield.
+
+Models must be placed in Unit Coherency (Section 1.6.4).
+
+These models ignore intervening obstacles (they are &quot;placed,&quot; not moved). However, they must end in a legal position (not overlapping bases or within Engagement Range of an enemy Unit).</span></div><div style="margin-bottom:10px;"></div><div class="rule-block-label">Page 1 - Block 4 (text)</div><div class="diff-row"><span class="diff-val">SIZE 0 AND SIZE 1 TERRAIN
+Unless stated otherwise, models move through Size 0 and Size 1 terrain freely, but cannot end that move overlapping the terrain’s footprint.
+
+GRASS (SIZE 1)
+This type of terrain does not block movement. Models can end movement on this type of terrain and it can be removed for the purpose of placing models. Once the models change their position, place the grass back into its original position.
+SIZE 2 AND LARGER TERRAIN
+ Models cannot move through terrain of Size 2 or larger.
+
+ELEVATION
+Models can be on one of 3 types of elevation:
+Models standing directly on the Playmat are on the GROUND LEVEL. 
+
+Models standing on <span class="del">ramps</span><span class="ins">horizontal terrain of size 1 or 2</span> are on <span class="del">RAMP</span><span class="ins">MID</span> <span class="del">LEVEL</span><span class="ins">GROUND</span>.<span class="del"> 
+
+</span><span class="ins">
+
+</span>Models standing on horizontal terrain of size <span class="del">4</span><span class="ins">3</span> or larger are on the HIGH GROUND.<span class="del"> 
+
+
+</span><span class="ins">
+
+
+ACCESS POINT
+Part of a Terrain that connects different elevation levels. Models moving through an ACCESS POINT can change their elevation.
+
+EXAMPLE OF ACCESS POINT
+LADDER
+
+PORTALS
+
+DOORS
+
+
+EXAMPLE OF MID GROUND TERRAIN
+RAMP
+
+CRATES
+
+CONTAINERS
+
+
+
+
+</span>RAMPS
+Ramps are a special type of Size 1<span class="ins"> MID GROUND</span> terrain that models cannot move through freely. Models may only enter and exit a ramp through its ACCESS POINTS, and may end their movement on the ramp.
+
+Each ramp has two ACCESS POINTS:
+The edge connecting the two lower corners of the ramp.
+
+The edge connecting the two upper corners of the ramp.</span></div><div style="margin-bottom:10px;"></div></div></div><div class="card"><div class="card-header"><span>4.0 THE GAME SEQUENCE - ASSAULT PHASE</span><span class="badge badge-mod">MODIFIED</span></div><div class="card-body"><div class="rule-block-label">Page 3 - Block 4 (text)</div><div class="diff-row"><span class="diff-val">4.6.7 CHARGE
+The Charge action allows <span class="del">a</span><span class="ins">an Non-Engaged</span> Unit to enter the Engagement Range of enemy Units. To resolve this action, follow these steps:
+
+DECLARE TARGETS
+
+The Active Player selects the acting<span class="ins"> Non-Engaged</span> Unit and declares one or more enemy Units to be the targets of the Charge:
+
+The targets must share the same Tag Type (GROUND vs. GROUND, or FLYING vs. FLYING).
+
+Unlike shooting, a Charge does not require the target to be Visible (Line of Sight). You may charge enemies hidden behind walls or ruins.
+
+If you intend to engage multiple enemy Units at once, you must declare all of them as targets before rolling any dice.
+
+
+DETERMINE CHARGE DISTANCE
+
+Select one model in the charging Unit to be the Leading Model. For each target Unit, nominate one enemy model as the Charge Target.
+
+Roll 1D6 and add the result to the Unit’s Speed characteristic.
+
+The result is the Charge Roll Distance. It represents the maximum distance the Leading Model can move during this action.
+
+This distance is measured along the actual path of travel. If the model must move around a wall, the distance is measured around the wall, not through it.</span></div><div style="margin-bottom:10px;"></div><div class="rule-block-label">Page 3 - Block 8 (text)</div><div class="diff-row"><span class="diff-val">OTHER MODELS IN THE UNIT
+Pick up all remaining models in the charging Unit and place them<span class="ins"> in Coherency</span>, so none of the models are within an Engagement Range (1&quot;) of a unit that was not declared as a Charge Target(s).  
+
+ You must follow this strict placement priority:
+
+Priority A (Base-to-Base): You must place models in Base-to-Base contact with enemy models from the declared target Unit(s) whenever physically possible.
+
+Priority B (Engagement): If Base-to-Base is impossible, place models within Engagement Range of the target(s).
+
+Priority C (Coherency): If neither is possible, place the remaining models as close as possible to the Leading Model to maintain Coherency.</span></div><div style="margin-bottom:10px;"></div></div></div><div class="card"><div class="card-header"><span>4.0 GAME SEQUENCE - COMBAT PHASE</span><span class="badge badge-mod">MODIFIED</span></div><div class="card-body"><div class="rule-block-label">Page 1 - Block 1 (text)</div><div class="diff-row"><span class="diff-val">4.7 PHASE 3: COMBAT PHASE
+During the Combat Phase, Engaged Units move to close the distance to their foes and trade blows in brutal melee combat. Unlike the previous phases where activation is voluntary, all Units currently in Engagement Range must act in this Phase. You cannot choose to skip a fight. 
+
+ACTIVATIONS
+Players take turns activating one Engaged Unit at a time, starting with the player chosen by the holder of the First Player Marker. When an eligible Unit is Activated, it follows the Close Combat<span class="ins"> Action</span> Sequence below.
+
+UNIT ELIGIBILITY 
+Only Engaged Units are allowed to act in this Phase. Once a Unit’s combat is resolved, remove its Activation Marker.
+
+PASSING
+A player only Passes when they have no Engaged Units remaining to Activate. When both players Pass, the phase ends.
+4.7.1 THE CLOSE COMBAT<span class="ins"> ACTION</span> SEQUENCE
+CLOSE RANKS
+
+<span class="ins">This step is optional. </span>Before rolling any dice, the Unit acts to surround the enemy and bring more weapons to bear:
+
+The controlling player selects a Leading Model and moves it up to 3&quot;. This move follows Movement rules (Section 4.4.2) but has two specific restrictions:
+
+The Leading Model may only move if it ends the move closer to the Unit(s) it is Engaged with.
+
+This move cannot cause the Unit to become Engaged with any new enemy Units that were not already Engaged at the start of this Phase.
+
+
+Reposition the rest of the Unit into Coherency with the Leading Model.
+
+Models must be placed in Base-to-Base contact with enemy models whenever possible.
+
+If Base-to-Base contact is not possible, place as many models as possible in Base-to-Base contact with friendly models from their own Unit that are within Engagement Range of the enemy.
+
+Models that are already in Base-to-Base contact at the start of this step are not moved. They are physically pinned by the enemy and cannot be placed any closer.
+
+Models from the Unit making this move cannot Disengage from other enemy units.</span></div><div style="margin-bottom:10px;"></div></div></div><div class="card"><div class="card-header"><span>5.0 ADVANCED RULES</span><span class="badge badge-mod">MODIFIED</span></div><div class="card-body"><div class="rule-block-label">Page 1 - Block 1 (text)</div><div class="diff-row"><span class="diff-val">5.1 SPECIAL ABILTIES
+All Special Abilities follow the same universal rules for use and resolution.
+
+A Special Ability is always written using a consistent structure to ensure clarity:
+
+Name: The ability’s official designation.
+
+Phase Limitations: If stated, the ability can only be used during that specific phase.
+
+Type: Every ability falls into one of three categories: Passive, Active, or Reaction.
+
+Cost: Some abilities require a resource payment (CP, BM, or PE) before resolution.
+
+Instruction: The rules text describing exactly what occurs.
+
+
+GENERIC REQUIREMENTS
+An ability can only be used if all requirements in its description are met. This includes:
+Correct Timing or Trigger.
+
+Satisfying any Phase restrictions.
+
+Target being within Range and Line of Sight (unless explicitly stated otherwise).
+
+Paying any required Costs in full.
+
+If even one requirement cannot be met, the ability cannot be declared<span class="ins">.
+
+The unit must be on the battlefield</span>.</span></div><div style="margin-bottom:10px;"></div><div class="rule-block-label">Page 1 - Block 2 (text)</div><div class="diff-row"><span class="diff-val">5.2 TYPES OF ABILITIES
+ACTIVE ABILITIES
+Active Abilities represent manoeuvres, technologies (like Stimpacks), or enhancements that require a deliberate command to execute.
+
+An Active Ability is generally used while a friendly Unit is currently Activated.
+
+It may be triggered immediately before declaring an Action, or immediately after an Action has been fully resolved. It cannot be used during an Action.
+
+If the ability is on a Unit, it cannot be used while that Unit is in Reserves. The Unit must be deployed on the battlefield to use it.
+
+Unless stated otherwise, modifiers and effects granted by an Active Ability expire at the End of the Current Round.
+
+
+LIMITATIONS
+Once Per Round: A specific Unit may use a named Active Ability only once per Game Round.
+This limit applies individually to each Unit. Two different Marine squads may both use Stimpack in the same round, but a single squad cannot use it twice.
+5.2.1 PASSIVE ABILITIES 
+Passive Abilities represent innate traits, permanent equipment, or constant biological adaptations:
+
+Passive Abilities are always active as long as the Unit is on the battlefield.
+
+They do not require the Unit to be Activated to function.
+
+Like Active abilities, Passive abilities on a Unit are not in effect while that Unit is in Reserves, unless explicitly stated otherwise.
+
+5.2.2 REACTION ABILITIES
+Reaction Abilities allow a player to act outside the normal sequence, responding to specific events:
+
+Trigger: Used in direct response to a defined event (e.g. &quot;When this Unit is targeted by an attack&quot;).
+
+A Reaction must be declared at the exact moment of the trigger. If the window is missed, the ability cannot be used.
+
+A Reaction cannot be used while the Unit is in Reserves unless stated otherwise.
+
+A player may resolve only one Reaction per each Activation. 
+
+
+EXAMPLE
+If a Zealot Unit is attacked, it may use Zealous Round OR Ground Armor, but not both in the same enemy attack action.
+
+
+If both players wish to use a Reaction to the same trigger:
+
+The Active Player (whose turn it currently is) resolves their Reaction first.
+
+The Opponent resolves their Reaction second.
+
+
+NO INTERRUPTION
+A player cannot use any Special Ability while an Action is currently in progress (e.g. between a Hit roll and an Armour roll, or while a model is physically moving across the battlefield), unless the ability is explicitly a Reaction designed to interrupt that specific sequence<span class="ins">. 
+
+           LIMITATIONS
+Once Per Round: A specific Unit may use a named Reaction Ability only once per Game Round.
+This limit applies individually to each Unit. Two different Medic squads may both use Life Support in the same round, but a single squad cannot use it twice</span>.</span></div><div style="margin-bottom:10px;"></div></div></div><div class="card"><div class="card-header"><span>5.0 KEYWORDS AND GLOSSARY</span><span class="badge badge-mod">MODIFIED</span></div><div class="card-body"><div class="rule-block-label">Page 1 - Block 1 (text)</div><div class="diff-row"><span class="diff-val">Keywords (written in BOLD CAPS) represent standardized effects shared between factions. Each Keyword entry has a Type (Terrain, Weapon Trait, Status, Effect etc.) to highlight the area of the same that it applies to.
+
+Stacking Rules 
+Unless explicitly stated otherwise, Keywords<span class="ins"> and Special Abilities</span> are not cumulative:
+Duplicates: Gaining the same Keyword twice provides no extra benefit.
+
+Numeric Values: If a Unit has Precision (1) and gains Precision (2), the values do not add together. The Unit benefits only from the single instance with the highest value.
+
+
+ACCESS POINT
+<span class="ins">Part of a Terrain that connects different elevation levels. Models moving through an ACCESS POINT can change their elevation.</span>A specific type of Terrain (Size 1) that connects different elevation levels. Models may move onto and end their movement atop an ACCESS POINT to traverse between GROUND LEVEL and HIGH GROUND. Additionally, models on an ACCESS POINT can be Engaged with models on both HIGH GROUND and GROUND LEVEL (overriding Section 2.6.1).
+
+ANTI-EVADE (X)
+When resolving an attack with this weapon against enemy units, the target unit suffers a -X Modifier to its Evade roll for this attack (modifying Section 4.6.4, Step 4).
+
+BUFF [Characteristic] (X)
+The unit gains a bonus of X to the specified Characteristic until the End of the Round.
+If the Characteristic is a Target Number (e.g. Armour, Hit), reduce the value by X (making the roll easier).
+
+If the Characteristic is a value (e.g. Speed, RoA), increase the value by X.</span></div><div style="margin-bottom:10px;"></div><div class="rule-block-label">Page 1 - Block 5 (text)</div><div class="diff-row"><span class="diff-val">NON-LETHAL DAMAGE (X)
+The unit suffers X points of Damage. Add this amount effectively to the unit&#039;s Damage Marker.<span class="del">
+</span><span class="ins">
+
+
+</span>Unlike standard Damage, the application of NON-LETHAL DAMAGE does not trigger the Remove Casualties step (Section 4.6.4, Step 5), even if the unit&#039;s Total Damage exceeds its Hit Points (HP) (overriding Section 4.6.4, Step 5).
+
+ON CREEP
+A unit is considered to be ON CREEP while it is within 6&quot; of a Creep Tumor token or any Friendly model designated as a Source of Creep.
+While satisfying this condition, the unit gains the ON CREEP Keyword. This allows the unit to trigger specific Special Abilities or Upgrades that require this state.
+
+PIERCE [TAG] X
+When resolving an attack against a unit possessing the specified Combat Tag (e.g., Armoured, Biological), treat this weapon’s Damage characteristic as X<span class="ins">.
+
+
+PINPOINT
+      Ranged Attacks made with this weapon may target engaged Enemy units ignoring the standard Engagement            Status restriction (overriding Section 4.6.3)</span>.
+
+PLACE (X)
+Select a model in this unit to be the Leading Model. Remove it from the battlefield and set it up again wholly within X&quot; of its starting position.
+Then, remove the remaining models of the unit and set them up maintaining unit Coherency (Section 1.6.4).
+When placing models via this rule:
+• Ignore intervening models and terrain (unless the position itself is impassable).
+• Models may be placed within the Engagement Range of Enemy models (the unit becomes Engaged), unless stated otherwise.
+
+PRECISION (X)
+When resolving an attack with this weapon, after rolling to Hit, you may move up to X failed Attack Dice directly into the Armour Pool.
+These dice are treated as successful Hits for all purposes, including resolving Surge (they may be moved to the Damage Pool if the weapon has a matching Surge Type).
+
+RESPAWN (X)
+Return up to X destroyed models to this unit.
+The return of these models cannot cause the unit’s Current Supply Value to increase. You may not return a model if doing so would push the unit’s model count into a higher bracket on its Supply Profile.
+
+Place each returned model in Base-to-Base Contact with an existing model in the unit. Returned models cannot be placed within Engagement Range (1&quot;) of any Enemy unit.
+
+Note: If a model cannot be placed legally due to terrain or enemy proximity, it cannot be returned.
+
+REPETITIVE
+This ability is exempt from the standard &quot;Once per Round&quot; limit (Section 1.8.2).
+The unit may use this ability multiple times during the same Game Round (and even multiple times during the same Activation), provided that all required Costs (such as CP, BM, or PE) and trigger conditions are met for each individual use.</span></div><div style="margin-bottom:10px;"></div></div></div><div class="card"><div class="card-header"><span>6.0 APPENDIX</span><span class="badge badge-mod">MODIFIED</span></div><div class="card-body"><div class="rule-block-label">Page 1 - Block 2</div><div class="row-add">+ Changelog (Feb 10th)
+
+
+
+
+Terran:
+
+
+
+
+Marine &amp;amp; Raynor&#039;s Raider (Marine) &amp;amp; Marauder: &#039;Stimpack&#039; NON-LETHAL DAMAGE Reduced from 3 to 2.
+
+Marine &amp;amp; Raynor&#039;s Raider (Marine): &#039;Slugthrower&#039; &amp;amp; &#039;Grenades - Frag&#039; Range increased from 6&quot; to 8&quot;.
+
+Marine: Reduced &#039;Combat Shield&#039; CP cost from 2 to 1 and replaced the effect with &quot;This unit is always eligible to make an Evade Roll against any Close Combat Attack targeting it and any Damage from an Enemy Special Ability.&quot;
+
+Raynor&#039;s Raider (Marine): Units supply per model remaining changed from: 1-3(0) 4-6(1) to 1-6(1)
+
+Jim Raynor: &#039;Freedom Fighters&#039; &amp;amp; &#039;Orders&#039; Range increased from 6&quot; to 8&quot;.
+
+Medic: &#039;Life Support&#039; &amp;amp; &#039;Medpack&#039; Range increased from 3&quot; to 4&quot;.
+
+Medic: &#039;Restoration&#039; Range increased from 6&quot; to 8&quot;.
+
+Goliath: &#039;Underbelly Machine Gun&#039; Replaced LONG RANGE (12&quot;) with PINPOINT KEYWORD.
+
+Academy: Changed &#039;Advanced Training&#039; to a reactive ability and replaced the effect with &quot;Once per Round, when a Friendly Support unit activates a Special Ability, reduce its CP cost by 1. Don&#039;t exhaust this card.&quot;
+
+
+
+
+Zerg:
+
+
+
+
+Zergling &amp;amp; Raptor (Zergling) &amp;amp; Swarmling (Zergling): &#039;Hardened Carapace&#039; upgrade has been removed.
+
+Vile (Roach): Unit cost increased from 190 to 200 Minerals.
+
+Vile (Roach): Replaced &#039;Debilitating Saliva&#039; effect with &quot;When an Enemy in range 8&quot; from this unit declares a Ranged Attack, that Enemy Range Weapons gain DEBUFF RoA (1).&quot;
+
+
+
+
+Protoss:
+
+
+
+
+Zealot &amp;amp; Praetor Guard (Zealot): Units Armor reduced from 4+ to 5+.
+
+Zealot: Unit cost reduced from 190 to 170 Minerals.
+
+Praetor Guard (Zealot): Unit cost reduced from 300 to 280 Minerals.
+
+Sentry: Units HP reduced from 5 to 4.
+
+Sentry: Changed &#039;Solid-Field Projectors&#039; to an active ability with 2PE cost and replaced the effect with &quot;Place 2 Force Field tokens within 8&quot; in an unoccupied space. Units of Size 2 or lower cannot move across Force Fields. Models of Size 3 or more can move over it, and it&#039;s then removed.&quot;
+
+Stalker: Replaced &#039;Fury of the Nerazim&#039; effect with &quot;If this unit&#039;s attacks an Enemy unit, that already was activated during this phase, its Particle Disruptors gain INSTANT.&quot;
+
+Artanis: Replaced &#039;Lightning Dash&#039; effect with &quot;Immediately after this unit resolves a successful Charge action. This Unit may immediately declare a second Charge action against a different Enemy unit, ignoring the restriction on Charging while Engaged. Do not resolve Devastating Charge Special Ability for the second time.&quot;
+
+
+
+
+Other:
+
+Introduced a new weapon KEYWORD &#039;PINPOINT&#039; that reads &quot;Ranged Attacks made with this weapon may target engaged Enemy units ignoring the standard Engagement Status restriction (overriding Section 4.6.3).&quot;
+
+SPECIALIST KEYWORD effect replaced with &quot;You can purchase each SPECIALIST upgrade only once for each unit. One model in a unit can have only one SPECIALIST upgrade.&quot;
+
+Char Plains Deployment: Mission Marker 1 and 2 have their location changed to be further apart.
+
+Clarification and fixes of many effects.</div><div class="rule-block-label">Page 1 - Block 3</div><div class="row-add">+ Changelog:
+
+
+
+
+Terran:
+
+Marine &amp;amp; Raynor&#039;s Raider (Marine) &amp;amp; Marauder: &#039;Stimpack&#039; PRECISION Keyword now also works on Close Combat Weapons.
+
+Marine: &#039;AGG-12&#039; weapon RoA reduced from 3 to 2.
+
+Marine &amp;amp; Raynor&#039;s Raider (Marine): &#039;Bayonet&#039; weapon lost Surge.
+
+Jim Raynor: First &#039;Orders&#039; ability replaced with &quot;1 CP: Until the End of the Round, that unit’s first used weapon gains the CRITICAL HIT (2).&quot;
+
+Supply Depot: Is now Unique.
+
+Orbital Command: Card cost reduced from 30 to 25 Vespene gas.
+
+Terran Armed Forces: Replaced &#039;Advanced Optics&#039; effect with &quot;The active Biological unit may select an Engaged Enemy unit as the target of Ranged Attacks.&quot;
+
+
+
+
+Zerg:
+
+Hydralisk: Added &quot;another Friendly&quot; to its &#039;Lunge&#039; ability.
+
+Vile (Roach): Replaced &#039;Debilitating Saliva&#039; effect with &quot;When an Enemy within 8&quot; from this unit declares a Ranged Attack. The first Range Weapon used in that attack has its RoA reduced by 3 (to a minimum of 2).&quot;
+
+
+
+
+Protoss:
+
+Adept: &#039;Glaive Strike&#039; weapon Hit increased from 3+ to 4+, upgrade cost reduced from 30 to 20 Minerals.
+
+Pylon: Added &quot;Once per round&quot; to its &#039;Warp Conduit&#039; ability.
+
+Power Field: Is now Unique.
+
+Observer: Card cost reduced from 30 to 25 Vespene gas.</div><div class="row-add"><strong>+ Page 2 Added</strong></div></div></div>
+    <script>
+        const addCount = document.querySelectorAll('.badge-add').length;
+        const delCount = document.querySelectorAll('.badge-del').length;
+        const modCount = document.querySelectorAll('.badge-mod').length;
+        document.getElementById('stats').innerHTML = 
+            '<strong>' + addCount + '</strong> additions, ' +
+            '<strong>' + delCount + '</strong> removals, ' +
+            '<strong>' + modCount + '</strong> modifications.';
+    </script>
+</body>
+</html>
