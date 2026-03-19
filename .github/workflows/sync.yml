@@ -7,6 +7,7 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    environment: FIREBASE_API_KEY
     permissions:
       contents: write # Needed to commit changes back to the repo
 
