@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Diff Files Index</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    #file-list { margin-bottom: 2em; }
+    .file-link { cursor: pointer; color: #0074d9; text-decoration: underline; display: block; margin: 0.5em 0; }
+    iframe { width: 100%; height: 600px; border: 1px solid #ccc; margin-top: 1em; }
+  </style>
+</head>
+<body>
+  <h1>Diff Files Index</h1>
+  <div id="file-list">Loading...</div>
+  <iframe id="diff-frame" src="" style="display:none;"></iframe>
+  <script>
+    fetch('diff-sctmg/diff_manifest.json')
+      .then(response => response.json())
+      .then(files => {
+        const listDiv = document.getElementById('file-list');
+        listDiv.innerHTML = '';
+        files.forEach(file => {
+          const link = document.createElement('span');
+          link.textContent = file;
+          link.className = 'file-link';
+          link.onclick = () => {
+            document.getElementById('diff-frame').src = 'diff-sctmg/' + file;
+            document.getElementById('diff-frame').style.display = 'block';
+          };
+          listDiv.appendChild(link);
+        });
+      })
+      .catch(() => {
+        document.getElementById('file-list').textContent = 'Failed to load file list.';
+      });
+  </script>
+</body>
+</html>
