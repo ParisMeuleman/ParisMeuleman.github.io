@@ -1,0 +1,28 @@
+{
+  "faction": "Zerg",
+  "mineralsLimit": 500,
+  "gasLimit": 50,
+  "factionCardId": null,
+  "tacticalCardIds": [],
+  "roster": [],
+  "missionIds": [],
+  "deploymentIds": [],
+  "mineralsUsed": 0,
+  "gasUsed": 0,
+  "supplyUsed": 0,
+  "slotsAvailable": {
+    "Core": 0,
+    "Elite": 0,
+    "Support": 0,
+    "Air": 0,
+    "Hero": 0
+  },
+  "slotsUsed": {
+    "Core": 0,
+    "Elite": 0,
+    "Support": 0,
+    "Air": 0,
+    "Hero": 0
+  },
+  "resourceTotal": 0
+}
