@@ -15,7 +15,7 @@
   <div id="file-list">Loading...</div>
   <iframe id="diff-frame" src="" style="display:none;"></iframe>
   <script>
-    fetch('diff-sctmg/diff_manifest.json')
+    fetch('diff_manifest.json')
       .then(response => response.json())
       .then(files => {
         const listDiv = document.getElementById('file-list');
@@ -25,7 +25,7 @@
           link.textContent = file;
           link.className = 'file-link';
           link.onclick = () => {
-            document.getElementById('diff-frame').src = 'diff-sctmg/' + file;
+            document.getElementById('diff-frame').src = './' + file;
             document.getElementById('diff-frame').style.display = 'block';
           };
           listDiv.appendChild(link);
