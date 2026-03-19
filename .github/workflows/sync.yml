@@ -19,11 +19,14 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: diff-sctmg/package-lock.json
 
       - name: Install Dependencies
+        working-directory: diff-sctmg
         run: npm install
 
       - name: Run Sync Script
+        working-directory: diff-sctmg
         env:
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
@@ -41,7 +44,7 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
           # Only commit if there are changes in the jsons directory
-          git add jsons/
+          git add diff-sctmg/jsons/
           if git diff --staged --quiet; then
             echo "No changes in data. Skipping commit."
           else
