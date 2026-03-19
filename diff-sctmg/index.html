@@ -2,38 +2,596 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Diff Files Index</title>
+  <title>Data Version Diff Viewer</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 2em; }
-    #file-list { margin-bottom: 2em; }
-    .file-link { cursor: pointer; color: #0074d9; text-decoration: underline; display: block; margin: 0.5em 0; }
-    iframe { width: 100%; height: 6000px; border: 1px solid #ccc; margin-top: 1em; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.5; color: #24292e; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f6f8fa; }
+    h1 { border-bottom: 1px solid #eaecef; padding-bottom: 10px; }
+    h2 { margin-top: 30px; color: #0366d6; border-bottom: 1px solid #eaecef; padding-bottom: 5px; }
+    
+    .card { background: #fff; border: 1px solid #e1e4e8; border-radius: 6px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card-header { background: #f6f8fa; padding: 10px 15px; border-bottom: 1px solid #e1e4e8; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+    .card-body { padding: 15px; font-size: 13px; }
+
+    /* Diff Containers */
+    .obj-diff { margin-left: 10px; padding-left: 10px; border-left: 2px solid #e1e4e8; margin-bottom: 10px; }
+    .diff-row { display: flex; margin-bottom: 4px; font-family: Consolas, monospace; }
+    .diff-key { min-width: 120px; color: #666; font-weight: bold; flex-shrink: 0; }
+    .diff-val { flex-grow: 1; word-break: break-word; }
+
+    /* Highlighting */
+    .val-add { color: #1a7f37; background: #e6ffec; padding: 0 4px; border-radius: 3px; }
+    .val-del { color: #cf222e; background: #ffebe9; text-decoration: line-through; padding: 0 4px; border-radius: 3px; }
+    
+    .row-add { background: #e6ffec; border-left: 3px solid #2da44e; padding: 5px; margin-bottom: 5px; border-radius: 0 4px 4px 0; }
+    .row-del { background: #ffebe9; border-left: 3px solid #cf222e; padding: 5px; margin-bottom: 5px; border-radius: 0 4px 4px 0; }
+    
+    /* Inline Diff */
+    .ins { background-color: #acf2bd; text-decoration: none; border-radius: 2px; border-bottom: 1px solid #22863a; color: #000; }
+    .del { background-color: #fdb8c0; text-decoration: line-through; border-radius: 2px; color: #555; }
+
+    .sub-header { font-weight: bold; color: #0366d6; margin-top: 15px; margin-bottom: 5px; font-family: sans-serif; border-bottom: 1px dashed #eaecef; padding-bottom: 2px; }
+    .sub-header:first-child { margin-top: 0; }
+    .rule-block-label { font-size: 11px; color: #999; text-transform: uppercase; margin-bottom: 2px; }
+    
+    .badge { display: inline-block; padding: 2px 6px; border-radius: 10px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+    .badge-mod { background: #fff5b1; color: #735c0f; }
+    .badge-add { background: #dafbe1; color: #1a7f37; }
+    .badge-del { background: #ffebe9; color: #cf222e; }
+
+    #controls { margin-bottom: 1.5em; background: #fff; padding: 15px; border: 1px solid #e1e4e8; border-radius: 6px; }
+    #stats { margin-bottom: 1em; font-size: 0.9em; color: #586069; }
+    
+    .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #0366d6; margin-right: 4px; cursor: pointer; }
+    .dot:hover { background: #0056b3; }
+    #date-dots { margin-top: 10px; }
+    .dot-label { font-size: 11px; color: #666; margin-right: 10px; }
   </style>
 </head>
 <body>
-  <h1>Diff Files Index</h1>
-  <div id="file-list">Loading...</div>
-  <iframe id="diff-frame" src="" style="display:none;"></iframe>
+  <h1>Data Version Diff Viewer</h1>
+  
+  <div id="controls">
+    <div style="margin-bottom: 10px;">
+      <label><input type="radio" name="mode" value="version" checked> Compare by Version</label>
+      <label style="margin-left: 1.5em;"><input type="radio" name="mode" value="date"> Compare by Date</label>
+    </div>
+
+    <div id="version-inputs">
+      <label for="data-type">Type:</label>
+      <select id="data-type"></select>
+
+      <label for="left-version" style="margin-left: 1em;">From:</label>
+      <select id="left-version"></select>
+
+      <label for="right-version" style="margin-left: 1em;">To:</label>
+      <select id="right-version"></select>
+    </div>
+
+    <div id="date-inputs" style="display:none;">
+      <label for="left-date">Start Date:</label>
+      <input type="date" id="left-date">
+
+      <label for="right-date" style="margin-left: 1em;">End Date:</label>
+      <input type="date" id="right-date">
+      
+      <div id="date-dots">
+        <span class="dot-label">Dates with data:</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 15px;">
+      <button id="diff-btn" style="padding: 6px 16px; background: #2ea44f; color: #fff; border: 1px solid rgba(27,31,35,0.15); border-radius: 6px; cursor: pointer; font-weight: bold;">Compare</button>
+    </div>
+  </div>
+
+  <div id="stats"></div>
+  <div id="diff-output"></div>
+
   <script>
-    fetch('diff_manifest.json')
-      .then(response => response.json())
-      .then(files => {
-        const listDiv = document.getElementById('file-list');
-        listDiv.innerHTML = '';
-        files.forEach(file => {
-          const link = document.createElement('span');
-          link.textContent = file;
-          link.className = 'file-link';
-          link.onclick = () => {
-            document.getElementById('diff-frame').src = './' + file;
-            document.getElementById('diff-frame').style.display = 'block';
-          };
-          listDiv.appendChild(link);
+    // --- 1. CONFIGURATION & STATE ---
+    const IGNORED_FIELDS = [
+      'feedback', 'timestamp', 'user', 'refId', 'isManual', 
+      'drafts', 'lastSentText', 'lastSentRating', 'frontUrl', 'backUrl',
+      'image', 'img'
+    ];
+    const PRIORITY_KEYS = ['name', 'type', 'phase', 'costS', 'costL', 'points', 'stats'];
+
+    let manifest = [];
+
+    // --- 2. UTILITIES ---
+
+    function escapeHtml(unsafe) {
+      if (typeof unsafe !== 'string') return String(unsafe);
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function cleanText(text) {
+      if (!text || typeof text !== 'string') return "";
+      return text
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/?(p|div|li|h[1-6])>/gi, '\n')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .trim();
+    }
+
+    function levenshtein(a, b) {
+      if (a.length === 0) return b.length;
+      if (b.length === 0) return a.length;
+      const matrix = [];
+      for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+      for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+      for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+          if (b.charAt(i - 1) == a.charAt(j - 1)) matrix[i][j] = matrix[i - 1][j - 1];
+          else matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1));
+        }
+      }
+      return matrix[b.length][a.length];
+    }
+
+    function getDiffOps(arr1, arr2) {
+      const m = arr1.length, n = arr2.length;
+      const dp = Array(m + 1).fill(0).map(() => Array(n + 1).fill(0));
+      for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) 
+        if (arr1[i-1] === arr2[j-1]) dp[i][j] = dp[i-1][j-1] + 1;
+        else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+      
+      let i = m, j = n, ops = [];
+      while (i > 0 || j > 0) {
+        if (i > 0 && j > 0 && arr1[i-1] === arr2[j-1]) { ops.push({op:'kp', val:arr1[i-1]}); i--; j--; }
+        else if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) { ops.push({op:'add', val:arr2[j-1]}); j--; }
+        else { ops.push({op:'del', val:arr1[i-1]}); i--; }
+      }
+      return ops.reverse();
+    }
+
+    function getInlineHtml(oldText, newText) {
+      const tokenize = (s) => s.split(/([^\w\s]|\s+)/).filter(x => x);
+      const ops = getDiffOps(tokenize(oldText), tokenize(newText));
+
+      let merged = [];
+      if(ops.length > 0) {
+        let current = ops[0];
+        for(let i=1; i<ops.length; i++) {
+          if(ops[i].op === current.op) {
+            current.val += ops[i].val;
+          } else {
+            merged.push(current);
+            current = ops[i];
+          }
+        }
+        merged.push(current);
+      }
+
+      return merged.map(o => {
+        const val = escapeHtml(o.val).replace(/\n/g, '<br>');
+        if (o.op === 'add') return `<span class="ins">${val}</span>`;
+        if (o.op === 'del') return `<span class="del">${val}</span>`;
+        return val;
+      }).join('');
+    }
+
+    function toArray(value) {
+      return Array.isArray(value) ? value : [];
+    }
+
+    function normalizeRulesData(data) {
+      if (Array.isArray(data)) return data;
+      if (!data || typeof data !== 'object') return [];
+      if (Array.isArray(data.sections)) return data.sections;
+      if (data.rules && Array.isArray(data.rules.sections)) return data.rules.sections;
+      return [];
+    }
+
+    function normalizeUnitsData(data) {
+      if (Array.isArray(data)) return data;
+      if (!data || typeof data !== 'object') return [];
+      if (Array.isArray(data.units)) return data.units;
+      if (Array.isArray(data.cards)) return data.cards;
+      if (Array.isArray(data.items)) return data.items;
+      if (Array.isArray(data.data)) return data.data;
+      return [];
+    }
+
+    function sectionBlocks(section) {
+      const blocks = [];
+      if (Array.isArray(section?.pages)) {
+        section.pages.forEach((page, pageIdx) => {
+          const pageContent = toArray(page?.content);
+          pageContent.forEach((block, blockIdx) => {
+            blocks.push({
+              label: `Page ${pageIdx + 1} - Block ${blockIdx + 1}`,
+              type: block?.type || 'text',
+              value: cleanText(block?.value)
+            });
+          });
         });
-      })
-      .catch(() => {
-        document.getElementById('file-list').textContent = 'Failed to load file list.';
+      }
+      const walkItem = (item, chain) => {
+        const title = cleanText(item?.title || 'Untitled');
+        const nextChain = [...chain, title];
+        toArray(item?.content).forEach((block, idx) => {
+          blocks.push({
+            label: `${nextChain.join(' > ')} - Block ${idx + 1}`,
+            type: block?.type || 'text',
+            value: cleanText(block?.value)
+          });
+        });
+        toArray(item?.subItems).forEach(sub => walkItem(sub, nextChain));
+        toArray(item?.subSubItems).forEach(sub => walkItem(sub, nextChain));
+      };
+      if (Array.isArray(section?.items)) {
+        section.items.forEach(item => walkItem(item, []));
+      }
+      return blocks;
+    }
+
+    // --- 3. DIFF ENGINES ---
+
+    function generateRulesDiff(oldData, newData) {
+      let html = '';
+      const safeOld = toArray(oldData);
+      const safeNew = toArray(newData);
+
+      const oldMap = new Map(safeOld.map((s, i) => [s?.id || `old-${i}`, s]));
+      const newMap = new Map(safeNew.map((s, i) => [s?.id || `new-${i}`, s]));
+
+      newMap.forEach((newSection, id) => {
+        const oldSection = oldMap.get(id);
+        const title = newSection.title || "Untitled Section";
+
+        if (!oldSection) {
+          html += `<div class="card"><div class="card-header"><span>${escapeHtml(title)}</span><span class="badge badge-add">ADDED</span></div><div class="card-body">Entire section added.</div></div>`;
+          return;
+        }
+
+        let sectionDiffHtml = '';
+        const oldBlocks = sectionBlocks(oldSection);
+        const newBlocks = sectionBlocks(newSection);
+        const maxBlocks = Math.max(oldBlocks.length, newBlocks.length);
+
+        for (let bIdx = 0; bIdx < maxBlocks; bIdx++) {
+          const oldBlock = oldBlocks[bIdx];
+          const newBlock = newBlocks[bIdx];
+          const label = newBlock?.label || oldBlock?.label || `Block ${bIdx + 1}`;
+
+          if (!oldBlock) {
+            sectionDiffHtml += `<div class="rule-block-label">${escapeHtml(label)}</div>`;
+            sectionDiffHtml += `<div class="row-add">+ ${escapeHtml(newBlock?.value || '')}</div>`;
+            continue;
+          }
+          if (!newBlock) {
+            sectionDiffHtml += `<div class="rule-block-label">${escapeHtml(label)}</div>`;
+            sectionDiffHtml += `<div class="row-del">- ${escapeHtml(oldBlock?.value || '')}</div>`;
+            continue;
+          }
+
+          const tOld = oldBlock.value || '';
+          const tNew = newBlock.value || '';
+          const typeOld = oldBlock.type || 'text';
+          const typeNew = newBlock.type || 'text';
+
+          if (typeOld !== typeNew || tOld !== tNew) {
+            sectionDiffHtml += `<div class="rule-block-label">${escapeHtml(label)} (${escapeHtml(typeNew)})</div>`;
+            if (typeNew === 'image' || typeOld === 'image') {
+              sectionDiffHtml += `<div class="diff-row"><span class="diff-val">[Image Source Updated]</span></div>`;
+            } else {
+              sectionDiffHtml += `<div class="diff-row"><span class="diff-val">${getInlineHtml(tOld, tNew)}</span></div>`;
+            }
+            sectionDiffHtml += `<div style="margin-bottom:10px;"></div>`;
+          }
+        }
+
+        if (sectionDiffHtml) {
+          html += `<div class="card"><div class="card-header"><span>${escapeHtml(title)}</span><span class="badge badge-mod">MODIFIED</span></div><div class="card-body">${sectionDiffHtml}</div></div>`;
+        }
       });
+
+      oldMap.forEach((oldSection, id) => {
+        if (newMap.has(id)) return;
+        const title = oldSection?.title || 'Untitled Section';
+        html += `<div class="card"><div class="card-header"><span>${escapeHtml(title)}</span><span class="badge badge-del">REMOVED</span></div><div class="card-body">Entire section removed.</div></div>`;
+      });
+
+      return html;
+    }
+
+    function sortKeys(obj) {
+      return Object.keys(obj).sort((a,b) => {
+        const idxA = PRIORITY_KEYS.indexOf(a);
+        const idxB = PRIORITY_KEYS.indexOf(b);
+        if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+        if (idxA !== -1) return -1;
+        if (idxB !== -1) return 1;
+        return a.localeCompare(b);
+      });
+    }
+
+    function objectToHtml(obj) {
+      if (typeof obj !== 'object' || obj === null) return String(obj);
+      const keys = sortKeys(obj);
+      return keys
+        .filter(k => !IGNORED_FIELDS.includes(k))
+        .map(k => {
+          const val = typeof obj[k] === 'object' ? JSON.stringify(obj[k]) : obj[k];
+          return `<span style="color:#666">${k}:</span> ${escapeHtml(String(val))}`;
+        }).join('<br>');
+    }
+
+    function compareObjects(oldObj, newObj, indent = 0) {
+      let html = '';
+      const allKeys = new Set([...Object.keys(oldObj), ...Object.keys(newObj)]);
+      const sortedKeys = Array.from(allKeys).sort((a,b) => {
+        const idxA = PRIORITY_KEYS.indexOf(a);
+        const idxB = PRIORITY_KEYS.indexOf(b);
+        if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+        if (idxA !== -1) return -1;
+        if (idxB !== -1) return 1;
+        return a.localeCompare(b);
+      });
+
+      sortedKeys.forEach(key => {
+        if (IGNORED_FIELDS.includes(key)) return;
+        const oVal = oldObj[key], nVal = newObj[key];
+        if (nVal === undefined) {
+          html += `<div class="diff-row"><span class="diff-key">${key}:</span><span class="diff-val val-del">${escapeHtml(String(oVal))}</span></div>`;
+          return;
+        }
+        if (oVal === undefined) {
+          html += `<div class="diff-row"><span class="diff-key">${key}:</span><span class="diff-val val-add">${escapeHtml(String(nVal))}</span></div>`;
+          return;
+        }
+        if (JSON.stringify(oVal) !== JSON.stringify(nVal)) {
+          if (typeof oVal === 'object' && oVal !== null && typeof nVal === 'object' && nVal !== null) {
+            html += `<div class="sub-header">${key}</div><div class="obj-diff">${compareObjects(oVal, nVal, indent + 1)}</div>`;
+          } else {
+            let diffHtml = (typeof oVal === 'string' && oVal.length > 15) ? getInlineHtml(oVal, nVal) : `<span class="val-del">${escapeHtml(String(oVal))}</span> &#8594; <span class="val-add">${escapeHtml(String(nVal))}</span>`;
+            html += `<div class="diff-row"><span class="diff-key">${key}:</span><span class="diff-val">${diffHtml}</span></div>`;
+          }
+        }
+      });
+      return html;
+    }
+
+    function compareArrays(oldArr, newArr) {
+      let html = '';
+      const getKey = (item) => (item && typeof item === 'object') ? (item.id || item.name) : null;
+
+      if (oldArr.length > 0 && typeof oldArr[0] !== 'object') {
+        const ops = getDiffOps([...oldArr].sort(), [...newArr].sort());
+        ops.forEach(op => {
+          if (op.op === 'add') html += `<div class="diff-row row-add">+ ${escapeHtml(op.val)}</div>`;
+          if (op.op === 'del') html += `<div class="diff-row row-del">- ${escapeHtml(op.val)}</div>`;
+        });
+        return html;
+      }
+
+      const newItems = [...newArr], oldItems = [...oldArr], matchedIndices = new Set();
+
+      oldItems.forEach(oldItem => {
+        let bestMatchIdx = -1;
+        const oldKey = getKey(oldItem);
+        if (oldKey) {
+          bestMatchIdx = newItems.findIndex((n, idx) => getKey(n) === oldKey && !matchedIndices.has(idx));
+        }
+        if (bestMatchIdx === -1 && oldItem.name) {
+          newItems.forEach((newItem, idx) => {
+            if (!matchedIndices.has(idx) && newItem.name && levenshtein(oldItem.name, newItem.name) <= 2) bestMatchIdx = idx;
+          });
+        }
+
+        if (bestMatchIdx !== -1) {
+          matchedIndices.add(bestMatchIdx);
+          const newItem = newItems[bestMatchIdx];
+          if (JSON.stringify(getCanonical(oldItem)) !== JSON.stringify(getCanonical(newItem))) {
+            html += `<div class="sub-header">${escapeHtml(oldItem.name || oldItem.id || "Item")}</div><div class="obj-diff">${compareObjects(oldItem, newItem)}</div>`;
+          }
+        } else {
+          html += `<div class="row-del"><strong>- Removed:</strong><br>${objectToHtml(oldItem)}</div>`;
+        }
+      });
+
+      newItems.forEach((newItem, idx) => {
+        if (!matchedIndices.has(idx)) html += `<div class="row-add"><strong>+ Added:</strong><br>${objectToHtml(newItem)}</div>`;
+      });
+      return html;
+    }
+
+    function getCanonical(obj) {
+      if (obj === null || typeof obj !== 'object') return obj;
+      if (Array.isArray(obj)) return obj.map(getCanonical);
+      const keys = Object.keys(obj).sort();
+      const res = {};
+      keys.forEach(k => { if(!IGNORED_FIELDS.includes(k)) res[k] = getCanonical(obj[k]); });
+      return res;
+    }
+
+    function generateUnitsDiff(oldData, newData) {
+      let html = '';
+      const safeOld = toArray(oldData);
+      const safeNew = toArray(newData);
+      const oldMap = new Map(safeOld.map((u, i) => [u?.id || u?.name || `old-${i}`, u]));
+
+      safeNew.forEach((newItem, i) => {
+        const itemKey = newItem?.id || newItem?.name || `new-${i}`;
+        const oldItem = oldMap.get(itemKey);
+
+        if (!oldItem) {
+          html += `<div class="card"><div class="card-header"><span>${escapeHtml(newItem?.name || newItem?.id || itemKey)}</span><span class="badge badge-add">ADDED</span></div><div class="card-body">Item added to database.</div></div>`;
+          return;
+        }
+
+        let itemDiffHtml = '';
+        const keys = sortKeys({...oldItem, ...newItem});
+        keys.forEach(key => {
+          if (IGNORED_FIELDS.includes(key)) return;
+          const o = oldItem[key], n = newItem[key];
+          if (JSON.stringify(getCanonical(o)) === JSON.stringify(getCanonical(n))) return;
+
+          if (Array.isArray(o) && Array.isArray(n)) {
+            const arrHtml = compareArrays(o, n);
+            if (arrHtml) itemDiffHtml += `<div class="sub-header">${key}</div><div class="obj-diff">${arrHtml}</div>`;
+          } else if (typeof o === 'object' && o !== null && n !== null) {
+            itemDiffHtml += `<div class="sub-header">${key}</div><div class="obj-diff">${compareObjects(o, n)}</div>`;
+          } else {
+            let valHtml = (o === undefined) ? `<span class="val-add">${escapeHtml(String(n))}</span>` : (n === undefined) ? `<span class="val-del">${escapeHtml(String(o))}</span>` : (typeof o === 'string' && o.length > 20) ? getInlineHtml(o, n) : `<span class="val-del">${escapeHtml(String(o))}</span> &#8594; <span class="val-add">${escapeHtml(String(n))}</span>`;
+            itemDiffHtml += `<div class="diff-row"><span class="diff-key">${key}:</span><span class="diff-val">${valHtml}</span></div>`;
+          }
+        });
+
+        if (itemDiffHtml) {
+          html += `<div class="card"><div class="card-header"><span>${escapeHtml(newItem?.name || newItem?.id || itemKey)}</span><span class="badge badge-mod">MODIFIED</span></div><div class="card-body">${itemDiffHtml}</div></div>`;
+        }
+      });
+
+      oldMap.forEach((oldItem, key) => {
+        if (!safeNew.some((newItem, i) => (newItem?.id || newItem?.name || `new-${i}`) === key)) {
+          html += `<div class="card"><div class="card-header"><span>${escapeHtml(oldItem?.name || oldItem?.id || key)}</span><span class="badge badge-del">REMOVED</span></div><div class="card-body">Item removed from database.</div></div>`;
+        }
+      });
+      return html;
+    }
+
+    // --- 4. UI & ORCHESTRATION ---
+
+    function findClosestFile(type, date) {
+      const filtered = manifest.filter(e => e.type === type && e.date.split(' ')[0] <= date);
+      if (!filtered.length) return null;
+      return filtered.sort((a, b) => b.date.localeCompare(a.date))[0];
+    }
+
+    function updateStats() {
+      const addCount = document.querySelectorAll('.badge-add').length;
+      const delCount = document.querySelectorAll('.badge-del').length;
+      const modCount = document.querySelectorAll('.badge-mod').length;
+      document.getElementById('stats').innerHTML = 
+        '<strong>' + addCount + '</strong> additions, ' +
+        '<strong>' + delCount + '</strong> removals, ' +
+        '<strong>' + modCount + '</strong> modifications.';
+    }
+
+    async function getDiffHtml(leftEntry, rightEntry) {
+      const [left, right] = await Promise.all([
+        fetch('jsons/' + leftEntry.file).then(r => r.json()),
+        fetch('jsons/' + rightEntry.file).then(r => r.json())
+      ]);
+      
+      if (leftEntry.type === 'rules') {
+        return generateRulesDiff(normalizeRulesData(left), normalizeRulesData(right));
+      } else {
+        return generateUnitsDiff(normalizeUnitsData(left), normalizeUnitsData(right));
+      }
+    }
+
+    async function showDiff() {
+      const mode = document.querySelector('input[name="mode"]:checked').value;
+      const output = document.getElementById('diff-output');
+      output.innerHTML = 'Computing diff...';
+      
+      let html = '';
+      try {
+        if (mode === 'version') {
+          const type = document.getElementById('data-type').value;
+          const leftV = document.getElementById('left-version').value;
+          const rightV = document.getElementById('right-version').value;
+          const leftEntry = manifest.find(e => e.type === type && String(e.version) === String(leftV));
+          const rightEntry = manifest.find(e => e.type === type && String(e.version) === String(rightV));
+          
+          if (leftEntry && rightEntry) {
+            html = await getDiffHtml(leftEntry, rightEntry);
+          }
+        } else {
+          const startDate = document.getElementById('left-date').value;
+          const endDate = document.getElementById('right-date').value;
+          const types = [...new Set(manifest.map(e => e.type))];
+          
+          for (const type of types) {
+            const leftEntry = findClosestFile(type, startDate);
+            const rightEntry = findClosestFile(type, endDate);
+            
+            if (leftEntry && rightEntry && leftEntry.file !== rightEntry.file) {
+              html += `<h2>${type.charAt(0).toUpperCase() + type.slice(1)} Diff (v${leftEntry.version} → v${rightEntry.version})</h2>`;
+              html += await getDiffHtml(leftEntry, rightEntry);
+            }
+          }
+        }
+        output.innerHTML = html || 'No significant differences found for the selected versions/dates.';
+        updateStats();
+      } catch (err) {
+        output.innerHTML = '<div style="color:red">Error: ' + err.message + '</div>';
+      }
+    }
+
+    function updateSelectors() {
+      const mode = document.querySelector('input[name="mode"]:checked').value;
+      document.getElementById('version-inputs').style.display = (mode === 'version') ? '' : 'none';
+      document.getElementById('date-inputs').style.display = (mode === 'date') ? '' : 'none';
+
+      if (mode === 'version') {
+        const type = document.getElementById('data-type').value;
+        const filtered = manifest.filter(e => e.type === type);
+        const leftSel = document.getElementById('left-version');
+        const rightSel = document.getElementById('right-version');
+        
+        leftSel.innerHTML = ''; rightSel.innerHTML = '';
+        filtered.forEach(e => {
+          const opt = `<option value="${e.version}">v${e.version} (${e.date})</option>`;
+          leftSel.innerHTML += opt;
+          rightSel.innerHTML += opt;
+        });
+        if (filtered.length > 1) rightSel.selectedIndex = filtered.length - 1;
+      }
+    }
+
+    // Initialize
+    fetch('jsons/data_manifest.json')
+      .then(r => r.json())
+      .then(data => {
+        manifest = data;
+        
+        // Populate types
+        const types = [...new Set(manifest.map(e => e.type))];
+        const typeSel = document.getElementById('data-type');
+        types.forEach(t => {
+          typeSel.innerHTML += `<option value="${t}">${t.charAt(0).toUpperCase() + t.slice(1)}</option>`;
+        });
+
+        // Initialize Dates
+        const allDates = [...new Set(manifest.map(e => e.date.split(' ')[0]))].sort();
+        const leftDate = document.getElementById('left-date');
+        const rightDate = document.getElementById('right-date');
+        leftDate.value = allDates[0];
+        rightDate.value = allDates[allDates.length-1];
+        leftDate.min = allDates[0]; leftDate.max = allDates[allDates.length-1];
+        rightDate.min = allDates[0]; rightDate.max = allDates[allDates.length-1];
+
+        // Date dots
+        const dotsContainer = document.getElementById('date-dots');
+        allDates.forEach(d => {
+          const dot = document.createElement('span');
+          dot.className = 'dot';
+          dot.title = d;
+          dot.onclick = () => {
+            // Cycle between setting start and end date
+            if (leftDate.value === d) rightDate.value = d;
+            else leftDate.value = d;
+          };
+          dotsContainer.appendChild(dot);
+        });
+
+        updateSelectors();
+      });
+
+    // Event Listeners
+    document.querySelectorAll('input[name="mode"]').forEach(r => r.onchange = updateSelectors);
+    document.getElementById('data-type').onchange = updateSelectors;
+    document.getElementById('diff-btn').onclick = showDiff;
   </script>
 </body>
 </html>

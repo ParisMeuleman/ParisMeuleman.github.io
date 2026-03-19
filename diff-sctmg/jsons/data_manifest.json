@@ -1,0 +1,68 @@
+[
+  {
+    "type": "rules",
+    "version": 9,
+    "file": "rules_cache_data_v9.json",
+    "date": "2026-02-17 16:12"
+  },
+  {
+    "type": "rules",
+    "version": 10,
+    "file": "rules_cache_data_v10.json",
+    "date": "2026-02-20 14:12"
+  },
+  {
+    "type": "rules",
+    "version": 11,
+    "file": "rules_cache_data_v11.json",
+    "date": "2026-03-05 23:36"
+  },
+  {
+    "type": "rules",
+    "version": 42,
+    "file": "rules_cache_data_v42.json",
+    "date": "2026-03-12 23:25"
+  },
+  {
+    "type": "rules",
+    "version": 43,
+    "file": "rules_cache_data_v43.json",
+    "date": "2026-03-19 05:24"
+  },
+  {
+    "type": "factions",
+    "version": 50,
+    "file": "factions_cache_data_v50.json",
+    "date": "2026-02-17 16:12"
+  },
+  {
+    "type": "factions",
+    "version": 54,
+    "file": "factions_cache_data_v54.json",
+    "date": "2026-02-20 13:40"
+  },
+  {
+    "type": "factions",
+    "version": 56,
+    "file": "factions_cache_data_v56.json",
+    "date": "2026-03-05 23:37"
+  },
+  {
+    "type": "factions",
+    "version": 65,
+    "file": "factions_cache_data_v65.json",
+    "date": "2026-03-19 05:24"
+  },
+  {
+    "type": "units",
+    "version": 62,
+    "file": "units_cache_data_v62.json",
+    "date": "2026-03-19 13:27"
+  },
+  {
+    "type": "cards",
+    "version": 65,
+    "file": "cards_cache_data_v65.json",
+    "date": "2026-03-19 13:27"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "name": "diff-sctmg-sync",
+  "version": "1.0.0",
+  "description": "Sync script for StarCraft TMG data",
+  "main": "sync.js",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "firebase": "^10.8.0"
+  },
+  "scripts": {
+    "sync": "node sync.js"
+  }
+}

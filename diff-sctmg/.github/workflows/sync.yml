@@ -1,0 +1,50 @@
+name: Sync Firebase Data
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Run every 6 hours (00:00, 06:00, 12:00, 18:00 UTC)
+  workflow_dispatch: # Allow manual trigger from the GitHub Actions tab
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to commit changes back to the repo
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Sync Script
+        env:
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
+          FIREBASE_DATABASE_ID: ${{ secrets.FIREBASE_DATABASE_ID }}
+        run: npm run sync
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Only commit if there are changes in the jsons directory
+          git add jsons/
+          if git diff --staged --quiet; then
+            echo "No changes in data. Skipping commit."
+          else
+            git commit -m "Auto-sync: Update data to latest version"
+            git push
+          fi
