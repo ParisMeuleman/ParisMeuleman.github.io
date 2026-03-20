@@ -17,13 +17,25 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app, process.env.FIREBASE_DATABASE_ID || "(default)");
+
+// Default to 'starcrafttmgbeta' as seen in source files, or use env var
+const databaseId = process.env.FIREBASE_DATABASE_ID || "starcrafttmgbeta";
+const db = getFirestore(app, databaseId);
 
 const MANIFEST_PATH = './jsons/data_manifest.json';
 const JSONS_DIR = './jsons';
 
 async function sync() {
     console.log('🚀 Starting Data Sync...');
+
+    // Validation
+    const requiredEnv = ['FIREBASE_API_KEY', 'FIREBASE_PROJECT_ID'];
+    const missing = requiredEnv.filter(k => !process.env[k]);
+    if (missing.length > 0) {
+        console.error(`❌ Error: Missing required environment variables: ${missing.join(', ')}`);
+        console.error('Please ensure you have set these in your .env file or GitHub Secrets.');
+        process.exit(1);
+    }
 
     if (!fs.existsSync(JSONS_DIR)) {
         fs.mkdirSync(JSONS_DIR);
