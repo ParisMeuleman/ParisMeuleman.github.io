@@ -107,8 +107,7 @@
     "combatRange": "3",
     "tags": "Biological, Light, Ground",
     "name": "Adept",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "artanis",
@@ -218,8 +217,7 @@
       "models": 1
     },
     "name": "Artanis",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "corpser__roach_",
@@ -356,8 +354,7 @@
       "shield": "-",
       "speed": "4/7"
     },
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "goliath",
@@ -494,8 +491,7 @@
         "activation": ""
       }
     ],
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "hydralisk",
@@ -614,8 +610,7 @@
     ],
     "faction": "Zerg",
     "keywords": "",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "jim_raynor",
@@ -725,8 +720,7 @@
       }
     ],
     "unitType": "Hero",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "kerrigan",
@@ -827,8 +821,7 @@
       "models": 0,
       "cost": 0
     },
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "kerrigan_swarm_raptor__zergling_",
@@ -929,8 +922,7 @@
       "models": 0,
       "cost": 0
     },
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "marauder",
@@ -1040,8 +1032,7 @@
         "costS": 0
       }
     ],
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "marine",
@@ -1169,8 +1160,7 @@
       "cost": 210,
       "models": 9
     },
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "medic",
@@ -1280,8 +1270,7 @@
       "models": 3
     },
     "keywords": "",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "omega_worm",
@@ -1364,8 +1353,7 @@
       }
     ],
     "combatRange": "-",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "point_defense_drone",
@@ -1439,8 +1427,7 @@
     },
     "tags": "Armoured, Flying, Mechanical, Unique",
     "name": "Point Defense Drone",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "praetor_guard__zealot_",
@@ -1550,8 +1537,7 @@
     ],
     "name": "Praetor Guard (Zealot)",
     "keywords": "Khalai",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "pylon",
@@ -1625,8 +1611,7 @@
         "supply": 0
       }
     ],
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "queen",
@@ -1754,8 +1739,7 @@
       "models": 1
     },
     "unitType": "Support",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "raptor__zergling_",
@@ -1883,8 +1867,7 @@
       "hp": "1"
     },
     "name": "Raptor (Zergling)",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "raynor_s_raider__marine_",
@@ -1994,8 +1977,7 @@
       "evade": "5+",
       "speed": "4/7"
     },
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "roach",
@@ -2123,8 +2105,7 @@
         "costL": 0
       }
     ],
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "roachling",
@@ -2189,8 +2170,7 @@
       }
     ],
     "unitType": "Other",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "sentry",
@@ -2291,8 +2271,7 @@
       "cost": 0
     },
     "faction": "Protoss",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "stalker",
@@ -2393,8 +2372,7 @@
         "tier": 3
       }
     ],
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "swarmling__zergling_",
@@ -2495,8 +2473,7 @@
     ],
     "tags": "Biological, Light, Ground",
     "name": "Swarmling (Zergling)",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "vile__roach_",
@@ -2633,8 +2610,7 @@
       }
     ],
     "unitType": "Core",
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "zealot",
@@ -2744,8 +2720,7 @@
         "linkedTo": ""
       }
     ],
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   },
   {
     "id": "zergling",
@@ -2855,7 +2830,6 @@
         "costS": 30
       }
     ],
-    "isManual": false,
-    "type": "unit"
+    "isManual": false
   }
 ]

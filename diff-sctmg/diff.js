@@ -4,7 +4,7 @@ const fs = require('fs');
 const IGNORED_FIELDS = [
     'feedback', 'timestamp', 'user', 'refId', 'isManual', 
     'drafts', 'lastSentText', 'lastSentRating', 'frontUrl', 'backUrl',
-    'image', 'img'
+    'image', 'img', 'type'
 ];
 
 // Keys to display first in objects (in this order)
