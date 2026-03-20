@@ -100,6 +100,16 @@
 
     // --- 2. UTILITIES ---
 
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const datePart = dateStr.split(' ')[0];
+      const parts = datePart.split('-');
+      if (parts.length !== 3) return dateStr;
+      const [y, m, d] = parts;
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return `${d} ${months[parseInt(m) - 1]} ${y}`;
+    }
+
     function escapeHtml(unsafe) {
       if (typeof unsafe !== 'string') return String(unsafe);
       return unsafe
@@ -504,7 +514,7 @@
           const rightEntry = manifest.find(e => e.type === type && String(e.version) === String(rightV));
           
           if (leftEntry && rightEntry) {
-            html = `<h2>${type.charAt(0).toUpperCase() + type.slice(1)} Diff (v${leftEntry.version} (${leftEntry.date.split(' ')[0]}) → v${rightEntry.version} (${rightEntry.date.split(' ')[0]}))</h2>`;
+            html = `<h2>${type.charAt(0).toUpperCase() + type.slice(1)} Diff (v${leftEntry.version} (${formatDate(leftEntry.date)}) → v${rightEntry.version} (${formatDate(rightEntry.date)}))</h2>`;
             html += await getDiffHtml(leftEntry, rightEntry);
           }
         } else {
@@ -517,7 +527,7 @@
             const rightEntry = findClosestFile(type, endDate);
             
             if (leftEntry && rightEntry && leftEntry.file !== rightEntry.file) {
-              html += `<h2>${type.charAt(0).toUpperCase() + type.slice(1)} Diff (v${leftEntry.version} (${leftEntry.date.split(' ')[0]}) → v${rightEntry.version} (${rightEntry.date.split(' ')[0]}))</h2>`;
+              html += `<h2>${type.charAt(0).toUpperCase() + type.slice(1)} Diff (v${leftEntry.version} (${formatDate(leftEntry.date)}) → v${rightEntry.version} (${formatDate(rightEntry.date)}))</h2>`;
               html += await getDiffHtml(leftEntry, rightEntry);
             }
           }
