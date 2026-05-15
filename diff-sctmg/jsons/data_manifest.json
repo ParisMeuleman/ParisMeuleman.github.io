@@ -76,5 +76,23 @@
     "version": 65,
     "file": "cards_cache_data_v65.json",
     "date": "2026-03-20 10:58"
+  },
+  {
+    "type": "rules",
+    "version": 47,
+    "file": "rules_cache_data_v47.json",
+    "date": "2026-05-15 18:36"
+  },
+  {
+    "type": "units",
+    "version": 65,
+    "file": "units_cache_data_v65.json",
+    "date": "2026-05-15 18:36"
+  },
+  {
+    "type": "cards",
+    "version": 67,
+    "file": "cards_cache_data_v67.json",
+    "date": "2026-05-15 18:36"
   }
 ]
