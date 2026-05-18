@@ -94,5 +94,11 @@
     "version": 67,
     "file": "cards_cache_data_v67.json",
     "date": "2026-05-15 18:36"
+  },
+  {
+    "type": "rules",
+    "version": 48,
+    "file": "rules_cache_data_v48.json",
+    "date": "2026-05-18 13:18"
   }
 ]
